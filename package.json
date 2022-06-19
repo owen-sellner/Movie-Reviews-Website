@@ -1,6 +1,7 @@
 {
   "name": "node-react-app",
   "version": "1.0.0",
+  "homepage": "https://ov-research-4.uwaterloo.ca:3103/"
   "scripts": {
     "client": "cd client && yarn start",
     "server": "nodemon server.js",

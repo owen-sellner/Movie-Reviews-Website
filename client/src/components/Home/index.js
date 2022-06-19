@@ -70,11 +70,6 @@ function Review() {
             setHasErrorRating(true)
         }
 
-        console.log(selectedMovie)
-        console.log(enteredTitle)
-        console.log(enteredReview)
-        console.log(selectedRating)
-
         setHasSubmitted(selectedMovie && enteredTitle && enteredReview && selectedRating)
 
         if(selectedMovie && enteredTitle && enteredReview && selectedRating) {
@@ -99,8 +94,12 @@ function Review() {
 
     // Function to handle a new review being added
     const handleAddReview = () => {
-        const newReviews = reviews.concat({movie: selectedMovie, title: enteredTitle, description: enteredReview, rating: selectedRating})
-        setReviews(newReviews)
+        if (reviews[0].title == '') {
+            setReviews([{movie: selectedMovie, title: enteredTitle, description: enteredReview, rating: selectedRating}])
+        } else {
+            const newReviews = reviews.concat({movie: selectedMovie, title: enteredTitle, description: enteredReview, rating: selectedRating})
+            setReviews(newReviews)
+        }
     }
 
     return(
@@ -203,6 +202,9 @@ function Review() {
                             spacing={2} 
                             direction="row"
                         >   
+                            {/* SPACING */}
+                            <Grid item xs={12}></Grid>
+                            
                             {/* TITLE */}
                             <Grid item xs={4}></Grid>
                             <Grid item xs={4}>
