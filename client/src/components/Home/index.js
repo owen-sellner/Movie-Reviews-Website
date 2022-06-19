@@ -14,8 +14,6 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 
-const colSize = 1;
-
 const serverURL = "http://ov-research-4.uwaterloo.ca:3103";
 
 // Parent Component
