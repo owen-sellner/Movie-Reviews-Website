@@ -17,58 +17,6 @@ import Button from '@material-ui/core/Button';
 
 const serverURL = "http://ov-research-4.uwaterloo.ca:3103"; 
 
-const fetch = require("node-fetch");
-
-class Home extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userID: 1,
-      mode: 0
-    }
-  };
-
-  componentDidMount() {
-    //this.loadUserSettings();
-  }
-
-
-  loadUserSettings() {
-    this.callApiLoadUserSettings()
-      .then(res => {
-        //console.log("loadUserSettings returned: ", res)
-        var parsed = JSON.parse(res.express);
-        console.log("loadUserSettings parsed: ", parsed[0].mode)
-        this.setState({ mode: parsed[0].mode });
-      });
-  }
-
-  callApiLoadUserSettings = async () => {
-    const url = serverURL + "/api/loadUserSettings";
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        //authorization: `Bearer ${this.state.token}`
-      },
-      body: JSON.stringify({
-        userID: this.state.userID
-      })
-    });
-    const body = await response.json();
-    if (response.status !== 200) throw Error(body.message);
-    console.log("User settings: ", body);
-    return body;
-  }
-
-  render() {
-    return (
-      <Review />
-    );
-  }
-}
-
 // Parent Component
 function Review() {
 
@@ -377,4 +325,4 @@ function ReviewRating(props) {
     );
 }
 
-export default Home;
+export default Review;
