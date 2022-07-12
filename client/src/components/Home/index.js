@@ -15,7 +15,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 
 // SERVER MODE
-const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3103"; 
+const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3103/"; 
 // DEV MODE
 // const serverURL = ""; 
 
@@ -74,11 +74,11 @@ function Review() {
         "Content-Type": "application/json",
         },
         body: JSON.stringify({
-            userID: {userID},
-            reviewTitle: {selectedMovie},
-            reviewContent: {enteredReview},
-            reviewScore: {selectedRating},
-            moviesID: {selectedMovieID}
+            userID: userID,
+            reviewTitle: selectedMovie,
+            reviewContent: enteredReview,
+            reviewScore: selectedRating,
+            moviesID: selectedMovieID
         })
     });
     const body = await response.json();
