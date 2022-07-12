@@ -15,10 +15,85 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 
 
-const serverURL = "http://ov-research-4.uwaterloo.ca:3103"; 
+// const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3103/"; 
+const serverURL = ""; 
+
 
 // Parent Component
 function Review() {
+
+    // Activates the 
+    React.useEffect(() => {
+        getMovies();
+    }, []);
+    
+
+    const getMovies = () => {
+        callApiGetMovies()
+            .then(res => {
+            console.log("callApiGetMovies returned: ", res)
+            var parsed = JSON.parse(res.express);
+            console.log("callApiGetMovies parsed: ", parsed);
+            setMovies(parsed);
+            });
+    }
+    
+    const callApiGetMovies = async () => {
+    const url = serverURL + "/api/getMovies";
+    console.log(url);
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        }
+    });
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    console.log("Movies: ", body);
+    return body;
+    }
+
+    const addReview = () => {
+        callApiAddReview()
+            .then(res => {
+            console.log("callApiAddReview returned: ", res)
+            var parsed = JSON.parse(res.express);
+            console.log("callApiAddReview parsed: ", parsed);
+            });
+    }
+    
+    const callApiAddReview = async () => {
+    const url = serverURL + "/api/addReview";
+    console.log(url);
+
+    const response = await fetch(url, {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            userID: {userID},
+            reviewTitle: {selectedMovie},
+            reviewContent: {enteredReview},
+            reviewScore: {selectedRating},
+            moviesID: {selectedMovieID}
+        })
+    });
+    const body = await response.json();
+    if (response.status !== 200) throw Error(body.message);
+    console.log("Review: ", body);
+    return body;
+    }
+
+    function findMovieID(arr, movie) {
+        return arr.find((item) => {
+          return item.name === movie;
+        }).id
+    }
+      
+
+    // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
     // Template Object Array
     const initialReviews = [{
@@ -30,6 +105,15 @@ function Review() {
 
     // Review List State
     const [reviews, setReviews] = React.useState(initialReviews);
+
+    // Movies List State 
+    const [movies, setMovies] = React.useState([]);
+
+    // userID State 
+    const [userID, setUserID] = React.useState(1);
+
+    // selectedMovieID 
+    const [selectedMovieID, setSelectedMovieID] = React.useState('');
 
     // Submission Check State
     const [hasSubmitted, setHasSubmitted] = React.useState(false);
@@ -77,11 +161,15 @@ function Review() {
         if(selectedMovie && enteredTitle && enteredReview && selectedRating) {
             handleAddReview()
         }
+
+        addReview();
+
     }
 
     // Functions to handle the form values
     const handleSelectedMovie = (event) => {
         setSelectedMovie(event.target.value)
+        setSelectedMovieID(findMovieID(movies, event.target.value))
     }
     
     const handleEnteredTitle = (event) => {
@@ -140,7 +228,7 @@ function Review() {
                             <Typography variant="h6">Select Movie:</Typography>
                         </Grid>
                         <Grid item xs={3}>
-                            <MovieSelection hasError={hasErrorMovie} editMovie={handleSelectedMovie}/>
+                            <MovieSelection hasError={hasErrorMovie} editMovie={handleSelectedMovie} movies={movies}/>
                         </Grid>
                         <Grid item xs={12-8}></Grid>
                     {/* Row 3 */}
@@ -258,11 +346,11 @@ function MovieSelection(props) {
                     onChange={props.editMovie}
                     error={props.hasError}
                 >
-                    <MenuItem value="Harry Potter and the Philosopher's Stone">Harry Potter and the Philosopher's Stone</MenuItem>
-                    <MenuItem value="Harry Potter and the Chamber of Secrets">Harry Potter and the Chamber of Secrets</MenuItem>
-                    <MenuItem value="Harry Potter and the Prisoner of Azkaban">Harry Potter and the Prisoner of Azkaban</MenuItem>
-                    <MenuItem value="Harry Potter and the Goblet of Fire">Harry Potter and the Goblet of Fire</MenuItem>
-                    <MenuItem value="Harry Potter and the Order of the Phoenix">Harry Potter and the Order of the Phoenix</MenuItem>
+                    {props.movies.map((item) => {
+                    return (
+                        <MenuItem value={item.name}>{item.name}</MenuItem>
+                    );
+                })} 
                 </Select>
                 <FormHelperText style={{color:"red"}}>{props.hasError && "Please select a movie"}</FormHelperText>
             </FormControl>

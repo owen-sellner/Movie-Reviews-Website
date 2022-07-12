@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(path.join(__dirname, "client/build")));
 
 
+// User Api
 app.post('/api/loadUserSettings', (req, res) => {
 
 	let connection = mysql.createConnection(config);
@@ -32,6 +33,48 @@ app.post('/api/loadUserSettings', (req, res) => {
 		let string = JSON.stringify(results);
 		//let obj = JSON.parse(string);
 		res.send({ express: string });
+	});
+	connection.end();
+});
+
+// movies Api
+app.post('/api/getMovies', (req, res) => {
+
+	let connection = mysql.createConnection(config);
+
+	let sql = `SELECT * FROM osellner.movies`;
+	console.log(sql);
+	let data = [];
+
+	connection.query(sql, data, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+
+		let obj = JSON.stringify(results);
+		res.send({ express: obj });
+	});
+	connection.end();
+});
+
+// Review Api
+app.post('/api/addReview', (req, res) => {
+
+	console.log("BBBBBBBBBBBBBBBBBB");
+
+	let connection = mysql.createConnection(config);
+
+	let sql = `INSERT INTO osellner.Review (reviewTitle, reviewContent, reviewScore, userID, moviesID) VALUES (?, ?, ?, ?, ?)`;
+	let data = [req.body.reviewTitle, req.body.reviewContent, req.body.reviewScore, req.body.userID, req.body.moviesID];
+
+	connection.query(sql, data, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+
+		let string = JSON.stringify(results);
+		let obj = JSON.parse(string);
+		res.send({ express: obj });
 	});
 	connection.end();
 });
