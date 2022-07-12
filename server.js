@@ -60,8 +60,6 @@ app.post('/api/getMovies', (req, res) => {
 // Review Api
 app.post('/api/addReview', (req, res) => {
 
-	console.log("BBBBBBBBBBBBBBBBBB");
-
 	let connection = mysql.createConnection(config);
 
 	let sql = `INSERT INTO osellner.Review (reviewTitle, reviewContent, reviewScore, userID, moviesID) VALUES (?, ?, ?, ?, ?)`;
