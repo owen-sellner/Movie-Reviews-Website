@@ -40,7 +40,7 @@ function Review() {
     }
     
     const callApiGetMovies = async () => {
-    const url = serverURL + "/api/getMovies";
+    const url = serverURL + "api/getMovies";
     console.log(url);
 
     const response = await fetch(url, {
