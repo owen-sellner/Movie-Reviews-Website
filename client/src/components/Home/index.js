@@ -162,7 +162,6 @@ function Review() {
         if(selectedMovie && enteredTitle && enteredReview && selectedRating) {
             handleAddReview()
             addReview();
-            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA" + enteredTitle);
         }
 
         
