@@ -75,7 +75,7 @@ function Review() {
         },
         body: JSON.stringify({
             userID: userID,
-            reviewTitle: selectedMovie,
+            reviewTitle: enteredTitle,
             reviewContent: enteredReview,
             reviewScore: selectedRating,
             moviesID: selectedMovieID
