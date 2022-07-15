@@ -67,7 +67,7 @@ function Review() {
     const callApiAddReview = async () => {
     const url = serverURL + "/api/addReview";
     console.log(url);
-
+    console.log(" asdasd asdasd " + enteredTitle)
     const response = await fetch(url, {
         method: "POST",
         headers: {
@@ -162,6 +162,7 @@ function Review() {
         if(selectedMovie && enteredTitle && enteredReview && selectedRating) {
             handleAddReview()
             addReview();
+            console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAA" + enteredTitle);
         }
 
         
