@@ -57,6 +57,129 @@ app.post('/api/getMovies', (req, res) => {
 	connection.end();
 });
 
+// movie cast Api
+app.post('/api/getCast', (req, res) => {
+
+	let connection = mysql.createConnection(config);
+
+	let sql = `SELECT * FROM osellner.movies
+	INNER JOIN osellner.roles
+	ON osellner.movies.id = osellner.roles.movie_id
+	INNER JOIN osellner.actors
+	ON osellner.actors.id = osellner.roles.actor_id
+	WHERE osellner.movies.id = ?
+	`;
+	console.log(sql);
+	let data = [req.body.moviesID];
+
+	connection.query(sql, data, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+
+		let obj = JSON.stringify(results);
+		res.send({ express: obj });
+	});
+	connection.end();
+});
+
+// search Api
+app.post('/api/getSearch', (req, res) => {
+
+	let connection = mysql.createConnection(config);
+
+	let sql = `SELECT DISTINCT  
+	osellner.movies.name,
+	GROUP_CONCAT(DISTINCT CONCAT(osellner.directors.first_name, " ", osellner.directors.last_name)) AS director_name,
+	AVG(osellner.Review.reviewScore) AS averageScore
+	FROM osellner.movies
+	-- Join Actors  
+	INNER JOIN osellner.roles
+	ON osellner.movies.id = osellner.roles.movie_id
+	INNER JOIN osellner.actors
+	ON osellner.actors.id = osellner.roles.actor_id
+	-- Join Directors
+	INNER JOIN osellner.movies_directors
+	ON osellner.movies.id = osellner.movies_directors.movie_id
+	INNER JOIN osellner.directors
+	ON osellner.directors.id = osellner.movies_directors.director_id
+	-- Join Reviews
+	LEFT JOIN osellner.Review
+	ON osellner.movies.id = osellner.Review.moviesID`;
+	let sqlWHERE = '';
+	let data = [];
+
+	if (req.body.enteredMovie) {
+		if (sqlWHERE == '') {
+			sqlWHERE += ' WHERE osellner.movies.name = ?'
+		} else {
+			sqlWHERE += ' AND osellner.movies.name = ?'
+		}
+
+		data.push(req.body.enteredMovie)
+	}
+
+	if (req.body.enteredActor) {
+		if (sqlWHERE == '') {
+			sqlWHERE += ' WHERE CONCAT(osellner.actors.first_name, " ", osellner.actors.last_name) = ?'
+		} else {
+			sqlWHERE += ' AND CONCAT(osellner.actors.first_name, " ", osellner.actors.last_name) = ?'
+		}
+
+		data.push(req.body.enteredActor)
+	}
+
+	if (req.body.enteredDirector) {
+		if (sqlWHERE == '') {
+			sqlWHERE += ' WHERE CONCAT(osellner.directors.first_name, " ", osellner.directors.last_name) = ?'
+		} else {
+			sqlWHERE += ' AND CONCAT(osellner.directors.first_name, " ", osellner.directors.last_name) = ?'
+		}
+
+		data.push(req.body.enteredDirector)
+	}
+
+	sql += sqlWHERE
+
+	sql += ` GROUP BY osellner.movies.name
+	ORDER BY osellner.movies.name`
+
+	connection.query(sql, data, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+
+		let obj = JSON.stringify(results);
+		res.send({ express: obj });
+	});
+	connection.end();
+});
+
+// getReviews Api
+app.post('/api/getReviews', (req, res) => {
+
+	let connection = mysql.createConnection(config);
+
+	let sql = `SELECT * FROM osellner.Review
+	-- Join Reviews
+	LEFT JOIN osellner.movies
+	ON osellner.Review.moviesID = osellner.movies.id
+	WHERE osellner.Review.reviewID IS NOT NULL`;
+
+	console.log(sql);
+	let data = [];
+
+	connection.query(sql, data, (error, results, fields) => {
+		if (error) {
+			return console.error(error.message);
+		}
+
+		let obj = JSON.stringify(results);
+		res.send({ express: obj });
+	});
+	connection.end();
+});
+
 // Review Api
 app.post('/api/addReview', (req, res) => {
 
@@ -64,7 +187,7 @@ app.post('/api/addReview', (req, res) => {
 
 	let sql = `INSERT INTO osellner.Review (reviewTitle, reviewContent, reviewScore, userID, moviesID) VALUES (?, ?, ?, ?, ?)`;
 	let data = [req.body.reviewTitle, req.body.reviewContent, req.body.reviewScore, req.body.userID, req.body.moviesID];
-
+	
 	connection.query(sql, data, (error, results, fields) => {
 		if (error) {
 			return console.error(error.message);
@@ -79,5 +202,5 @@ app.post('/api/addReview', (req, res) => {
 
 
 
-// app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
-app.listen(port, '172.31.31.77'); //for the deployed version, specify the IP address of the server
+app.listen(port, () => console.log(`Listening on port ${port}`)); //for the dev version
+// app.listen(port, '172.31.31.77'); //for the deployed version, specify the IP address of the server
