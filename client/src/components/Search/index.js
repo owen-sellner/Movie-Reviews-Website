@@ -40,14 +40,6 @@ function Search() {
     const [enteredActor, setEnteredActor] = React.useState('');
     const [enteredDirector, setEnteredDirector] = React.useState('');
 
-    // Review Listing State & Handle
-    const [selectedMovie, setSelectedMovie] = React.useState('');
-
-    const handleSelectedMovie = (event) => {
-        setSelectedMovie(event.target.value)
-    }
-
-
     // Functions to handle the search values
     const handleEnteredMovie = (event) => {
         setEnteredMovie(event.target.value)
