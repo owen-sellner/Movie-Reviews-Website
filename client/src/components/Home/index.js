@@ -17,9 +17,9 @@ import Button from '@material-ui/core/Button';
 
 
 // SERVER MODE
-// const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3103"; 
+const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3103"; 
 // DEV MODE
-const serverURL = ""; 
+// const serverURL = ""; 
 
 
 // Parent Component
