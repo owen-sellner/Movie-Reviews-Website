@@ -14,7 +14,10 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
 // Import Toolbar Elements
-
+import Box from '@material-ui/core/Box';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import history from '../Navigation/history';
 
 // SERVER MODE
 const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:3103"; 
@@ -23,8 +26,7 @@ const serverURL = "http://ec2-18-216-101-119.us-east-2.compute.amazonaws.com:310
 
 
 // Parent Component
-function Review() {
-    <h1>HOME</h1>
+function Reviews() {
 
     // Activates the 
     React.useEffect(() => {
@@ -200,12 +202,29 @@ function Review() {
     return(
         <div style={{margin: 15}}>
 
+            {/* Navigation Bar */}
+            <Box sx={{ display: 'flex', pb:10}}>
+                <AppBar style={{ background: '#ba34eb' }}>
+                    <Toolbar>
+                        <Typography variant='h4'>Film Verdict</Typography>
+                        <Box style={{marginLeft: "auto", marginRight: 0}}> 
+                            <Button onClick={() => history.push('/')} color="inherit">Landing</Button>
+                            <Button onClick={() => history.push('/search')} color="inherit">Search</Button>
+                            <Button onClick={() => history.push('/reviews')} color="inherit"><strong>Reviews</strong></Button>
+                            <Button onClick={() => history.push('/myPage')} color="inherit">Movie Cast</Button>
+                            
+                        </Box>
+                    </Toolbar>
+                </AppBar>
+            </Box>
+
             {/* Creates a column grid for the body of the page */}
             <Grid container
                 direction="column"
                 justifyContent="space-evenly"
                 alignItems="center"
             >
+                
                 {/* Page Title */}
                 <Grid item>
                     <Typography variant="h3">
@@ -419,4 +438,4 @@ function ReviewRating(props) {
     );
 }
 
-export default Review;
+export default Reviews;
